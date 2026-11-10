@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRISOU.BET — Le casino réservé aux mineurs (de fond)</title>
+<meta name="description" content="Site parodique. Aucun argent réel. Un faux casino pour mineurs de fond, avec des messages de prévention.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Bungee+Shade&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --coal:#0d0b0a; --coal2:#17130f; --coal3:#221c16; --rock:#3a3028;
+    --amber:#ffb627; --amber2:#ff8a00; --gold:#ffd86b; --rust:#c2461e;
+    --text:#efe6da; --muted:#a8998a; --green:#6bd16b; --red:#ff4d4d;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(ellipse at 50% -10%, rgba(255,182,39,.18), transparent 55%),
+      repeating-linear-gradient(115deg, #120f0c 0 18px, #15110d 18px 36px),
+      var(--coal);
+    color:var(--text); font-family:Inter,system-ui,sans-serif; min-height:100vh;
+  }
+  a{color:var(--amber)}
+  .wrap{max-width:1150px;margin:0 auto;padding:0 18px}
+
+  /* Bandeau prévention */
+  .warnbar{background:#000;color:#fff;font-size:13px;text-align:center;padding:8px 12px;border-bottom:2px solid var(--amber);font-family:'IBM Plex Mono',monospace}
+  .warnbar b{color:var(--amber)}
+
+  /* Header */
+  header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;flex-wrap:wrap}
+  .logo{font-family:'Bungee Shade',cursive;font-size:38px;color:var(--amber);text-shadow:0 0 18px rgba(255,182,39,.45);letter-spacing:1px}
+  .logo small{display:block;font-family:Inter;font-size:12px;color:var(--muted);letter-spacing:0;text-shadow:none;font-weight:600}
+  .wallet{display:flex;align-items:center;gap:10px;background:var(--coal3);border:2px solid var(--rock);border-radius:14px;padding:10px 16px}
+  .wallet .bal{font-family:Bungee;font-size:22px;color:var(--gold)}
+  .wallet .lbl{font-size:11px;color:var(--muted);text-transform:uppercase}
+  .btn{font-family:Bungee;border:none;cursor:pointer;border-radius:10px;padding:10px 16px;font-size:14px;transition:transform .08s, filter .15s}
+  .btn:active{transform:scale(.96)}
+  .btn:disabled{filter:grayscale(1) brightness(.6);cursor:not-allowed}
+  .btn-amber{background:linear-gradient(180deg,var(--amber),var(--amber2));color:#1a0f00;box-shadow:0 4px 0 #8a4a00}
+  .btn-dark{background:var(--rock);color:var(--text);box-shadow:0 4px 0 #1b1612}
+  .btn-red{background:linear-gradient(180deg,#ff6a4d,var(--rust));color:#fff;box-shadow:0 4px 0 #6e2210}
+  .btn-green{background:linear-gradient(180deg,#8be38b,#3ea03e);color:#062006;box-shadow:0 4px 0 #1f5a1f}
+
+  /* Hero */
+  .hero{position:relative;border-radius:22px;overflow:hidden;padding:34px 30px;margin:6px 0 18px;
+    background:linear-gradient(120deg,#2b1d10,#120d09 60%), #1a130d;border:2px solid #4a3622}
+  .hero h1{font-family:Bungee;font-size:clamp(26px,4.5vw,46px);line-height:1.05;color:#fff}
+  .hero h1 span{color:var(--amber)}
+  .hero p{color:var(--muted);margin-top:10px;max-width:640px}
+  .hero .bonus{display:inline-block;margin-top:16px;background:var(--amber);color:#1a0f00;font-family:Bungee;padding:8px 14px;border-radius:999px;font-size:14px;transform:rotate(-2deg)}
+  .hero .bonus small{font-family:Inter;font-weight:600;font-size:10px;display:block}
+  .lamp{position:absolute;right:30px;top:20px;font-size:90px;filter:drop-shadow(0 0 30px rgba(255,182,39,.7));animation:sway 3s ease-in-out infinite;transform-origin:top center}
+  @keyframes sway{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+  @media (max-width:700px){.lamp{display:none}}
+  .sponsor{margin-top:18px;font-size:14px;color:var(--text);background:rgba(0,0,0,.45);border-left:4px solid #6bd16b;padding:10px 14px;border-radius:8px;max-width:640px}
+  .sponsor b{color:#8be38b;font-family:Bungee;font-weight:400}
+  .sponsor span{font-size:12px;color:var(--muted)}
+
+  /* Ticker */
+  .ticker{overflow:hidden;white-space:nowrap;background:var(--coal2);border:1px solid var(--rock);border-radius:10px;padding:9px 0;margin-bottom:18px;font-size:13px}
+  .ticker .track{display:inline-block;animation:scroll 45s linear infinite;padding-left:100%}
+  .ticker .track span{margin-right:48px}
+  .ticker .track b{color:var(--gold)}
+  .ticker .track i{color:var(--muted);font-style:normal}
+  @keyframes scroll{to{transform:translateX(-100%)}}
+
+  /* Mise */
+  .betbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+  .betbar .chip{font-family:Bungee;background:var(--coal3);border:2px solid var(--rock);color:var(--text);border-radius:999px;padding:8px 14px;cursor:pointer}
+  .betbar .chip.on{border-color:var(--amber);color:var(--amber);box-shadow:0 0 12px rgba(255,182,39,.35)}
+  .betbar .lbl{color:var(--muted);font-size:13px}
+
+  /* Jeux */
+  .games{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
+  .card{background:linear-gradient(180deg,var(--coal3),var(--coal2));border:2px solid var(--rock);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px}
+  .card h2{font-family:Bungee;font-size:20px;color:var(--amber);display:flex;justify-content:space-between;align-items:center}
+  .card h2 .rtp{font-family:'IBM Plex Mono';font-size:10px;color:var(--muted);background:#000;padding:3px 7px;border-radius:6px}
+  .card .desc{font-size:13px;color:var(--muted)}
+  .msg{min-height:40px;font-size:13px;font-family:'IBM Plex Mono',monospace;background:#000;border-radius:8px;padding:8px 10px;color:var(--text)}
+  .msg.win{color:var(--green)} .msg.lose{color:var(--red)} .msg.warn{color:var(--amber)}
+
+  /* Slots */
+  .reels{display:flex;gap:10px;justify-content:center;background:#000;padding:16px;border-radius:14px;border:3px solid #5a4630;box-shadow:inset 0 0 25px rgba(0,0,0,.9)}
+  .reel{width:78px;height:86px;background:linear-gradient(180deg,#2a221a,#3d3126 50%,#2a221a);border-radius:10px;display:grid;place-items:center;font-size:48px;border:2px solid #574634}
+  .reel.spin{animation:blur .1s linear infinite}
+  @keyframes blur{50%{filter:blur(1.5px);transform:translateY(2px)}}
+  .paytable{font-size:11px;color:var(--muted);font-family:'IBM Plex Mono';display:grid;grid-template-columns:1fr 1fr;gap:2px 10px}
+
+  /* Crash */
+  .shaft{position:relative;height:200px;background:
+      linear-gradient(90deg,transparent 46%,#2e251c 46% 54%,transparent 54%),
+      repeating-linear-gradient(0deg,#191410 0 22px,#1f1913 22px 24px);
+    border-radius:14px;border:3px solid #5a4630;overflow:hidden}
+  .shaft .mult{position:absolute;top:10px;left:0;right:0;text-align:center;font-family:Bungee;font-size:40px;color:#fff;text-shadow:0 0 14px rgba(255,255,255,.3)}
+  .shaft .bird{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);font-size:44px;transition:bottom .1s linear}
+  .shaft.boom{animation:shake .4s}
+  .shaft.boom .mult{color:var(--red)}
+  @keyframes shake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .row .btn{flex:1}
+
+  /* Mines */
+  .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+  .tile{aspect-ratio:1;border-radius:10px;border:2px solid #574634;background:linear-gradient(160deg,#4a3c2e,#2b231b);font-size:26px;display:grid;place-items:center;cursor:pointer;transition:transform .1s}
+  .tile:hover:not(.open):not(.locked){transform:translateY(-2px);border-color:var(--amber)}
+  .tile.open{background:#0e0b08;cursor:default}
+  .tile.locked{cursor:not-allowed;opacity:.85}
+  .tile.bad{background:#3a0b05;border-color:var(--red)}
+  .tile.good{border-color:var(--gold)}
+
+  /* Stats */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:22px 0}
+  .stat{background:#000;border:1px solid var(--rock);border-radius:12px;padding:12px}
+  .stat .k{font-size:11px;color:var(--muted);text-transform:uppercase}
+  .stat .v{font-family:Bungee;font-size:22px;margin-top:4px}
+  .stat .v.neg{color:var(--red)} .stat .v.pos{color:var(--green)}
+
+  /* Prévention */
+  .prev{margin:10px 0 24px;border:2px dashed var(--amber);border-radius:18px;padding:22px;background:rgba(255,182,39,.05)}
+  .prev h3{font-family:Bungee;color:var(--amber);margin-bottom:10px}
+  .prev ul{margin-left:20px;font-size:14px;line-height:1.7}
+  .prev .help{margin-top:14px;background:#000;border-radius:12px;padding:14px;font-size:14px}
+  .prev .help b{color:var(--amber);font-size:18px}
+
+  footer{border-top:1px solid var(--rock);padding:22px 0 40px;font-size:12px;color:var(--muted);text-align:center;line-height:1.7}
+
+  /* Modales */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;z-index:50;padding:18px;backdrop-filter:blur(3px)}
+  .modal.show{display:flex}
+  .box{max-width:520px;width:100%;background:var(--coal3);border:3px solid var(--amber);border-radius:20px;padding:26px;text-align:center;box-shadow:0 0 50px rgba(255,182,39,.25)}
+  .box .big{font-size:60px}
+  .box h3{font-family:Bungee;font-size:24px;color:var(--amber);margin:8px 0}
+  .box p{color:var(--text);font-size:15px;line-height:1.55;margin:8px 0}
+  .box .small{font-size:12px;color:var(--muted)}
+  .box .actions{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+  .box table{width:100%;margin:12px 0;font-family:'IBM Plex Mono';font-size:14px;border-collapse:collapse}
+  .box td{padding:5px 4px;border-bottom:1px solid var(--rock);text-align:left}
+  .box td:last-child{text-align:right;font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="warnbar">⚠️ SITE PARODIQUE — AUCUN ARGENT RÉEL. Jouer comporte des risques : endettement, isolement, dépendance. Pour être aidé, appelez le <b>09 74 75 13 13</b> (appel non surtaxé).</div>
+
+<div class="wrap">
+  <header>
+    <div class="logo">GRISOU.BET<small>Le seul casino réservé aux mineurs (de fond) ⛏️</small></div>
+    <div class="wallet">
+      <div>
+        <div class="lbl">Ton solde</div>
+        <div class="bal"><span id="bal">1000</span> 🪙</div>
+      </div>
+      <button class="btn btn-dark" id="pauseBtn" title="Faire une pause">☕ Pause</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="lamp">🔦</div>
+    <h1>Creuse ta tombe<br><span>en pépites de charbon.</span></h1>
+    <p>Ici, on ne vérifie pas ton âge : on vérifie que tu as un casque. Mise tes pépites durement extraites au fond du puits n°7 et regarde-les disparaître plus vite qu'un filon épuisé.</p>
+    <div class="bonus">BONUS DE BIENVENUE : 1000 PÉPITES<small>+ 1 poumon noir offert*</small></div>
+    <div class="sponsor">🦖 Partenaire officiel : <b>KELIANAUSAURUS</b>, retrouvé fossilisé au fond du puits n°7, la souris encore à la main.<br><span>Seul dinosaure à avoir survécu à la météorite, mais pas à la saison 2 de Premier.</span></div>
+  </section>
+
+  <div class="ticker"><div class="track" id="ticker"></div></div>
+
+  <div class="betbar">
+    <span class="lbl">Ta mise :</span>
+    <button class="chip on" data-bet="10">10 🪙</button>
+    <button class="chip" data-bet="50">50 🪙</button>
+    <button class="chip" data-bet="100">100 🪙</button>
+    <button class="chip" data-bet="250">250 🪙</button>
+    <span class="lbl" id="betHint">— commence petit, c'est comme ça qu'ils t'ont tous eu.</span>
+  </div>
+
+  <div class="games">
+    <!-- SLOTS -->
+    <div class="card">
+      <h2>🎰 Le Filon <span class="rtp">RTP ≈ 85 %</span></h2>
+      <div class="desc">Trois rouleaux. Trois symboles identiques = jackpot. Un 💥 n'importe où = coup de grisou.</div>
+      <div class="reels">
+        <div class="reel" id="r0">⛏️</div>
+        <div class="reel" id="r1">💎</div>
+        <div class="reel" id="r2">🦖</div>
+      </div>
+      <button class="btn btn-amber" id="spinBtn">CREUSER (TOURNER)</button>
+      <div class="msg" id="slotMsg">Le contremaître te regarde. Tourne.</div>
+      <div class="paytable">
+        <span>🪨🪨🪨 ×3</span><span>⛏️⛏️⛏️ ×5</span>
+        <span>🦖🦖🦖 ×8 (fossile de Kelian)</span><span>🐤🐤🐤 ×12</span>
+        <span>💎💎💎 ×50</span><span>💎💎 ×2</span>
+      </div>
+    </div>
+
+    <!-- CRASH -->
+    <div class="card">
+      <h2>🐤 Coup de Grisou <span class="rtp">RTP ≈ 94 %</span></h2>
+      <div class="desc">Le canari descend dans le puits, le multiplicateur grimpe. Encaisse avant qu'il ne fasse <i>pouf</i>.</div>
+      <div class="shaft" id="shaft">
+        <div class="mult" id="mult">1.00×</div>
+        <div class="bird" id="bird">🐤</div>
+      </div>
+      <div class="row">
+        <button class="btn btn-amber" id="crashStart">DESCENDRE</button>
+        <button class="btn btn-green" id="crashCash" disabled>REMONTER (ENCAISSER)</button>
+      </div>
+      <div class="msg" id="crashMsg">Les mineurs emmenaient vraiment des canaris pour détecter le gaz. Lui non plus n'avait rien demandé.</div>
+    </div>
+
+    <!-- MINES -->
+    <div class="card">
+      <h2>💣 Champ de Mines <span class="rtp">RTP ≈ 95 %</span></h2>
+      <div class="desc">25 galeries, 4 poches de grisou. Chaque pépite trouvée augmente le gain. Une poche de gaz et tout part en fumée.</div>
+      <div class="grid" id="grid"></div>
+      <div class="row">
+        <button class="btn btn-amber" id="minesStart">NOUVELLE GALERIE</button>
+        <button class="btn btn-green" id="minesCash" disabled>ENCAISSER</button>
+      </div>
+      <div class="msg" id="minesMsg">Lance une galerie pour commencer à creuser.</div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="k">⏱️ Temps au fond</div><div class="v" id="sTime">0:00</div></div>
+    <div class="stat"><div class="k">🎲 Parties jouées</div><div class="v" id="sPlays">0</div></div>
+    <div class="stat"><div class="k">💸 Total misé</div><div class="v" id="sBet">0</div></div>
+    <div class="stat"><div class="k">📉 Bilan net</div><div class="v" id="sNet">0</div></div>
+  </div>
+
+  <section class="prev">
+    <h3>⛑️ La minute sécurité du contremaître</h3>
+    <ul>
+      <li><b>La maison gagne toujours.</b> Tous les jeux de ce site (comme ceux des vrais casinos) sont réglés pour te reprendre une partie de chaque mise sur la durée. Le « RTP » affiché, c'est ce que tu récupères en moyenne : le reste, c'est pour le casino.</li>
+      <li><b>Le « presque gagné » est un piège.</b> Deux 💎 sur trois, ça donne l'impression d'être proche. Ça ne veut rien dire : chaque tirage est indépendant.</li>
+      <li><b>On ne « se refait » pas.</b> Rejouer pour récupérer ses pertes, c'est le signal d'alarme n°1 de l'addiction.</li>
+      <li><b>Le temps file.</b> Regarde le compteur au-dessus : les casinos n'ont pas d'horloge pour une raison.</li>
+      <li><b>Les jeux d'argent sont interdits aux moins de 18 ans</b> en France. Les vrais mineurs, ceux qui vont au collège, n'ont rien à faire sur ces sites.</li>
+    </ul>
+    <div class="help">Si toi ou un proche avez un problème avec les jeux d'argent :<br><b>Joueurs Info Service — 09 74 75 13 13</b><br>Appel non surtaxé, 7j/7. Site : <a href="https://www.joueurs-info-service.fr" target="_blank" rel="noopener">joueurs-info-service.fr</a></div>
+  </section>
+
+  <footer>
+    GRISOU.BET est une <b>parodie</b>. Aucun argent réel n'est misé ni gagné, aucune donnée n'est collectée.<br>
+    Les « mineurs » de ce site sont des travailleurs de la mine, pas des enfants. Les jeux d'argent sont interdits aux moins de 18 ans.<br>
+    * Le poumon noir n'est pas un bonus. La silicose a tué des milliers de vrais mineurs. Respect à eux.<br>
+    Miner comporte des risques : éboulement, coup de grisou, silicose. Jouer aussi : endettement, isolement, dépendance.<br>
+    🦖 Une production pour <a href="https://www.twitch.tv/kelianausaurus" target="_blank" rel="noopener">Kelianausaurus</a> — Twitch &amp; <a href="https://www.youtube.com/@Kelianausaurus" target="_blank" rel="noopener">YouTube</a>. Lui non plus ne mise pas de vrai argent. Fais pareil.
+  </footer>
+</div>
+
+<!-- Modale âge -->
+<div class="modal show" id="ageModal">
+  <div class="box">
+    <div class="big">⛑️</div>
+    <h3>Contrôle à l'entrée du puits</h3>
+    <p>Ce site est strictement réservé aux <b>mineurs</b>. Es-tu mineur ?</p>
+    <div class="actions">
+      <button class="btn btn-amber" id="ageMiner">Oui, je descends à la mine tous les matins ⛏️</button>
+      <button class="btn btn-dark" id="ageKid">Oui, j'ai moins de 18 ans 🎒</button>
+      <button class="btn btn-dark" id="ageAdult">Non, je suis un majeur qui bosse dans un bureau 💼</button>
+    </div>
+    <p class="small">Site parodique, sans argent réel.</p>
+  </div>
+</div>
+
+<!-- Modale générique -->
+<div class="modal" id="modal">
+  <div class="box" id="modalBox"></div>
+</div>
+
+<script>
+(() => {
+  // ---------- État ----------
+  const START = 1000;
+  let balance = START, bet = 10, plays = 0, wagered = 0, won = 0, borrowAsks = 0;
+  let startTime = null, busy = { slot:false, crash:false, mines:false };
+  const $ = id => document.getElementById(id);
+
+  const fmt = n => Math.round(n).toLocaleString('fr-FR');
+  function render() {
+    $('bal').textContent = fmt(balance);
+    $('sPlays').textContent = plays;
+    $('sBet').textContent = fmt(wagered);
+    const net = won - wagered;
+    const el = $('sNet');
+    el.textContent = (net > 0 ? '+' : '') + fmt(net);
+    el.className = 'v ' + (net < 0 ? 'neg' : net > 0 ? 'pos' : '');
+  }
+  setInterval(() => {
+    if (!startTime) return;
+    const s = Math.floor((Date.now() - startTime) / 1000);
+    $('sTime').textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+  }, 1000);
+
+  function canBet() {
+    if (balance < bet) { bankrupt(); return false; }
+    return true;
+  }
+  function take() { balance -= bet; wagered += bet; plays++; render(); }
+  function pay(amount) { balance += amount; won += amount; render(); }
+  function afterRound() {
+    render();
+    if (plays > 0 && plays % 10 === 0) setTimeout(realityCheck, 700);
+    else if (balance < 10) setTimeout(bankrupt, 900);
+  }
+
+  // ---------- Modales ----------
+  function modal(html) { $('modalBox').innerHTML = html; $('modal').classList.add('show'); }
+  function closeModal() { $('modal').classList.remove('show'); }
+  window.__close = closeModal;
+
+  const tips = [
+    "Miner comporte des risques : éboulement, silicose, coup de grisou. Jouer aussi : endettement, isolement, dépendance.",
+    "Un canari dans une mine, c'était un détecteur de danger. Ton compteur de temps, c'est ton canari.",
+    "Si tu caches combien tu joues à tes proches, c'est que le gaz commence à monter.",
+    "Le casino ne te veut pas du bien. Il te veut longtemps.",
+    "« Encore une partie et j'arrête » : la phrase préférée des casinos.",
+    "Fixe-toi une limite AVANT de jouer, jamais pendant."
+  ];
+  function realityCheck() {
+    const mins = startTime ? Math.max(1, Math.round((Date.now() - startTime) / 60000)) : 1;
+    const net = won - wagered;
+    modal(`
+      <div class="big">🕯️</div>
+      <h3>Point d'étape sécurité</h3>
+      <p>Le contremaître t'oblige à remonter respirer deux secondes.</p>
+      <table>
+        <tr><td>Temps passé</td><td>${mins} min</td></tr>
+        <tr><td>Parties jouées</td><td>${plays}</td></tr>
+        <tr><td>Total misé</td><td>${fmt(wagered)} 🪙</td></tr>
+        <tr><td>Bilan</td><td style="color:${net<0?'var(--red)':'var(--green)'}">${net>0?'+':''}${fmt(net)} 🪙</td></tr>
+      </table>
+      <p>${tips[Math.floor(Math.random()*tips.length)]}</p>
+      <p class="small">Si c'était de l'argent réel : ${fmt(Math.abs(net)/10)} € ${net<0?'perdus':'gagnés (pour l\'instant)'}.</p>
+      <div class="actions">
+        <button class="btn btn-green" onclick="__close()">Je continue, en connaissance de cause</button>
+        <button class="btn btn-dark" onclick="__surface()">Je remonte à la surface</button>
+      </div>`);
+  }
+
+  function bankrupt() {
+    modal(`
+      <div class="big">🪦</div>
+      <h3>Filon épuisé</h3>
+      <p>Tu n'as plus assez de pépites. Dans la vraie vie, c'est souvent là que tout bascule.</p>
+      <div class="actions">
+        <button class="btn btn-red" onclick="__borrow()">Emprunter 500 🪙 au patron de la mine (taux 340 %)</button>
+        <button class="btn btn-dark" onclick="__reset()">Remonter et recommencer à zéro</button>
+        <button class="btn btn-green" onclick="__surface()">Arrêter et aller prendre l'air</button>
+      </div>`);
+  }
+  window.__borrow = () => {
+    borrowAsks++;
+    modal(`
+      <div class="big">🚫</div>
+      <h3>Non.</h3>
+      <p>On ne rejoue jamais de l'argent qu'on n'a pas. Emprunter pour jouer, c'est le chemin le plus court vers le surendettement.</p>
+      <p>${borrowAsks > 1 ? "Tu as déjà essayé une fois. Le réflexe de « se refaire » est un vrai signal d'alerte." : "Les vrais sites, eux, te proposeront des « bonus de dépôt ». C'est la même chose en plus poli."}</p>
+      <p class="small">Joueurs Info Service : 09 74 75 13 13 (non surtaxé)</p>
+      <div class="actions">
+        <button class="btn btn-dark" onclick="__reset()">Recommencer à zéro (c'est gratuit, c'est une parodie)</button>
+        <button class="btn btn-green" onclick="__surface()">Aller prendre l'air</button>
+      </div>`);
+  };
+  window.__reset = () => {
+    balance = START; plays = 0; wagered = 0; won = 0; startTime = Date.now();
+    render(); closeModal();
+  };
+  window.__surface = () => {
+    modal(`
+      <div class="big">🌤️</div>
+      <h3>Bienvenue à la surface</h3>
+      <p>Bonne décision. Le meilleur coup de ce casino, c'est de partir.</p>
+      <p>Bois un verre d'eau, appelle un pote, va marcher. Les pépites ne s'envoleront pas : elles n'existent pas.</p>
+      <div class="actions"><button class="btn btn-dark" onclick="__close()">Bon ok, je redescends juste pour voir</button></div>
+      <p class="small">(Ça, c'est exactement ce qu'on se dit à chaque fois.)</p>`);
+  };
+  $('pauseBtn').onclick = () => window.__surface();
+
+  // ---------- Âge ----------
+  const enter = () => { $('ageModal').classList.remove('show'); startTime = Date.now(); };
+  $('ageMiner').onclick = enter;
+  $('ageKid').onclick = () => {
+    $('ageModal').querySelector('.box').innerHTML = `
+      <div class="big">🎒</div>
+      <h3>Pas ce genre de mineur</h3>
+      <p>Les jeux d'argent sont <b>interdits aux moins de 18 ans</b>, et c'est pas pour t'embêter : plus on commence jeune, plus le risque d'addiction est élevé.</p>
+      <p>Ici c'est une blague sans argent réel, mais sur les vrais sites, fuis. Et si on te propose des « caisses », des paris ou des skins à jouer : même combat.</p>
+      <div class="actions"><button class="btn btn-amber" id="kidOk">J'ai compris, je visite juste la parodie</button></div>`;
+    $('kidOk').onclick = enter;
+  };
+  $('ageAdult').onclick = () => {
+    $('ageModal').querySelector('.box').innerHTML = `
+      <div class="big">💼</div>
+      <h3>Accès refusé</h3>
+      <p>Désolé, GRISOU.BET est réservé aux mineurs de fond. Ton seul contact avec le charbon, c'est le barbecue du dimanche.</p>
+      <div class="actions"><button class="btn btn-amber" id="adultOk">J'achète un casque et je reviens ⛑️</button></div>`;
+    $('adultOk').onclick = enter;
+  };
+
+  // ---------- Ticker ----------
+  const names = ["Jean-Pierre","Mohamed","Stanislas","Gérard","Wojciech","Marcel","Kader","Józef","Lucien","Antonio","Raymond","Dédé"];
+  const wins = ["une lampe frontale","3 pépites","une pioche d'occasion","un canari (vivant)","une bronchite chronique","le droit de remonter 5 min plus tôt","un ticket de cantine","rien, mais il y a cru"];
+  const items = Array.from({length:14}, () => {
+    const n = names[Math.random()*names.length|0], p = 1 + (Math.random()*12|0), w = wins[Math.random()*wins.length|0];
+    return `<span>⛏️ <b>${n}</b> du puits n°${p} vient de gagner ${w}</span>`;
+  });
+  items.splice(4, 0, `<span>🦖 <b>Kelianausaurus</b> du puits n°7 vient de faire 5 games de Premier sans un seul cheater : le jackpot le plus rare du site</span>`);
+  items.splice(10, 0, `<span>🦖 <b>Kelianausaurus</b> a coché toutes les cases du Bingo du cheater et gagné… un 6e cheater</span>`);
+  $('ticker').innerHTML = items.join('') + `<span><i>💸 Tous les autres viennent de perdre. Mais ça, on ne l'affiche jamais.</i></span>`;
+
+  // ---------- Mise ----------
+  const hints = {10:"— commence petit, c'est comme ça qu'ils t'ont tous eu.",50:"— on monte un peu, hein ?",100:"— la mise d'un mineur pressé.",250:"— c'est une semaine de charbon, ça."};
+  document.querySelectorAll('.chip').forEach(c => c.onclick = () => {
+    if (busy.crash || busy.mines) return;
+    document.querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
+    c.classList.add('on'); bet = +c.dataset.bet; $('betHint').textContent = hints[bet];
+  });
+
+  // ---------- Machine à sous ----------
+  const SYM = [['🪨',30],['⛏️',22],['🦖',16],['🐤',12],['💎',4],['💥',16]];
+  const PAY = {'🪨':3,'⛏️':5,'🦖':8,'🐤':12,'💎':50};
+  const totalW = SYM.reduce((a,s)=>a+s[1],0);
+  const pick = () => { let r = Math.random()*totalW; for (const [s,w] of SYM){ if((r-=w)<0) return s; } return '🪨'; };
+  const reels = [$('r0'),$('r1'),$('r2')];
+
+  $('spinBtn').onclick = () => {
+    if (busy.slot || !canBet()) return;
+    busy.slot = true; $('spinBtn').disabled = true; take();
+    const res = [pick(),pick(),pick()];
+    const msg = $('slotMsg'); msg.className = 'msg'; msg.textContent = 'Ça creuse…';
+    reels.forEach((r,i) => {
+      r.classList.add('spin');
+      const iv = setInterval(() => r.textContent = SYM[Math.random()*SYM.length|0][0], 70);
+      setTimeout(() => {
+        clearInterval(iv); r.classList.remove('spin'); r.textContent = res[i];
+        if (i === 2) finishSlot(res);
+      }, 700 + i*450);
+    });
+  };
+  function finishSlot(res) {
+    const msg = $('slotMsg');
+    let gain = 0, text = '', cls = 'lose';
+    const diamonds = res.filter(s => s === '💎').length;
+    if (res.includes('💥')) {
+      text = `💥 Coup de grisou ! −${bet} 🪙. Le casino te remercie pour ta contribution.`;
+    } else if (res[0] === res[1] && res[1] === res[2]) {
+      gain = bet * PAY[res[0]]; cls = 'win';
+      text = res[0] === '🦖'
+        ? `TRIPLE KELIANAUSAURUS 🦖🦖🦖 +${gain} 🪙 ! Fossile d'origine contrôlée. (Ce frisson, c'est la dopamine. C'est elle qui te fera rejouer.)`
+        : `JACKPOT ${res.join('')} +${gain} 🪙 ! (Ce petit frisson, c'est la dopamine. C'est elle qui te fera rejouer.)`;
+    } else if (diamonds === 2) {
+      gain = bet * 2; cls = 'win';
+      text = `Deux 💎 ! +${gain} 🪙. Tu as « gagné » ${gain - bet} 🪙 de plus que ta mise.`;
+    } else if (res[0] === res[1] || res[1] === res[2]) {
+      cls = 'warn';
+      text = `Presque ! …C'est exactement ce que les casinos veulent que tu penses. Un « presque » = une défaite.`;
+    } else {
+      text = `Rien. La roche est vide. −${bet} 🪙.`;
+    }
+    if (gain) pay(gain);
+    msg.className = 'msg ' + cls; msg.textContent = text;
+    busy.slot = false; $('spinBtn').disabled = false; afterRound();
+  }
+
+  // ---------- Crash ----------
+  let crashRAF, crashT0, crashPoint, crashM = 1;
+  const quips = [
+    "Le canari est mort. Ta mise aussi.",
+    "BOUM. Il fallait remonter. Il faut toujours remonter.",
+    "Le grisou ne prévient pas. Les dettes non plus.",
+    "Paix à son âme de canari."
+  ];
+  $('crashStart').onclick = () => {
+    if (busy.crash || !canBet()) return;
+    busy.crash = true; take();
+    // 6 % de marge maison
+    const r = Math.random();
+    crashPoint = Math.max(1, Math.floor((0.94 / (1 - r)) * 100) / 100);
+    crashM = 1; crashT0 = performance.now();
+    $('shaft').classList.remove('boom'); $('bird').textContent = '🐤';
+    $('crashStart').disabled = true; $('crashCash').disabled = false;
+    $('crashMsg').className = 'msg'; $('crashMsg').textContent = 'Le canari descend… le gaz monte…';
+    const tick = now => {
+      crashM = Math.exp((now - crashT0) * 0.00045);
+      if (crashM >= crashPoint) return crashBoom();
+      $('mult').textContent = crashM.toFixed(2) + '×';
+      $('bird').style.bottom = Math.min(140, 10 + (crashM - 1) * 30) + 'px';
+      crashRAF = requestAnimationFrame(tick);
+    };
+    if (crashPoint <= 1) return crashBoom();
+    crashRAF = requestAnimationFrame(tick);
+  };
+  function crashBoom() {
+    cancelAnimationFrame(crashRAF);
+    $('mult').textContent = crashPoint.toFixed(2) + '×';
+    $('shaft').classList.add('boom'); $('bird').textContent = '💥';
+    $('crashMsg').className = 'msg lose';
+    $('crashMsg').textContent = `${quips[Math.random()*quips.length|0]} (−${bet} 🪙)`;
+    endCrash();
+  }
+  $('crashCash').onclick = () => {
+    if (!busy.crash) return;
+    cancelAnimationFrame(crashRAF);
+    const gain = Math.floor(bet * crashM); pay(gain);
+    $('bird').textContent = '😮‍💨';
+    $('crashMsg').className = 'msg win';
+    $('crashMsg').textContent = `Remonté à ${crashM.toFixed(2)}× : +${gain} 🪙. Le gaz aurait explosé à ${crashPoint.toFixed(2)}×. Tu ne le sauras jamais à l'avance.`;
+    endCrash();
+  };
+  function endCrash() {
+    busy.crash = false; $('crashStart').disabled = false; $('crashCash').disabled = true; afterRound();
+  }
+
+  // ---------- Champ de mines ----------
+  const N = 25, BOMBS = 4;
+  let bombs = new Set(), opened = 0, mult = 1;
+  function buildGrid(active) {
+    $('grid').innerHTML = '';
+    for (let i = 0; i < N; i++) {
+      const t = document.createElement('div');
+      t.className = 'tile' + (active ? '' : ' locked');
+      t.dataset.i = i; t.textContent = '🪨';
+      t.onclick = () => dig(t);
+      $('grid').appendChild(t);
+    }
+  }
+  buildGrid(false);
+  $('minesStart').onclick = () => {
+    if (busy.mines || !canBet()) return;
+    busy.mines = true; take();
+    bombs = new Set(); while (bombs.size < BOMBS) bombs.add(Math.random()*N|0);
+    opened = 0; mult = 1; buildGrid(true);
+    $('minesStart').disabled = true; $('minesCash').disabled = true;
+    $('minesMsg').className = 'msg'; $('minesMsg').textContent = `Mise : ${bet} 🪙. Choisis une galerie.`;
+  };
+  function dig(t) {
+    if (!busy.mines || t.classList.contains('open')) return;
+    const i = +t.dataset.i;
+    t.classList.add('open');
+    if (bombs.has(i)) {
+      t.classList.add('bad'); t.textContent = '💥';
+      revealAll();
+      $('minesMsg').className = 'msg lose';
+      $('minesMsg').textContent = opened
+        ? `Poche de grisou ! Tu avais ${Math.floor(bet*mult)} 🪙 à portée de main. « Encore une », qu'il disait. (−${bet} 🪙)`
+        : `Grisou dès le premier coup de pioche. −${bet} 🪙.`;
+      endMines();
+      return;
+    }
+    const left = N - opened, safeLeft = N - BOMBS - opened;
+    mult *= (left / safeLeft) * 0.97;   // 3 % de marge à chaque coup
+    opened++;
+    t.classList.add('good'); t.textContent = '💎';
+    $('minesCash').disabled = false;
+    $('minesMsg').className = 'msg warn';
+    $('minesMsg').textContent = `${opened} pépite(s). Gain possible : ${Math.floor(bet*mult)} 🪙 (×${mult.toFixed(2)}). Plus tu creuses, plus tu risques.`;
+    if (opened === N - BOMBS) cashMines();
+  }
+  function revealAll() {
+    document.querySelectorAll('.tile').forEach(t => {
+      const i = +t.dataset.i;
+      if (!t.classList.contains('open')) { t.classList.add('open'); t.textContent = bombs.has(i) ? '☁️' : '·'; }
+      t.classList.add('locked');
+    });
+  }
+  function cashMines() {
+    if (!busy.mines || !opened) return;
+    const gain = Math.floor(bet * mult); pay(gain); revealAll();
+    $('minesMsg').className = 'msg win';
+    $('minesMsg').textContent = `Encaissé : +${gain} 🪙. Savoir s'arrêter, c'est le seul vrai talent ici.`;
+    endMines();
+  }
+  $('minesCash').onclick = cashMines;
+  function endMines() {
+    busy.mines = false; $('minesStart').disabled = false; $('minesCash').disabled = true; afterRound();
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
